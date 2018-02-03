@@ -1,5 +1,7 @@
 package org.dbflute.erflute.editor.view.information;
 
+import java.awt.MouseInfo;
+
 import org.dbflute.erflute.editor.ERFluteMultiPageEditor;
 import org.dbflute.erflute.editor.MainDiagramEditor;
 import org.dbflute.erflute.editor.VirtualDiagramEditor;
@@ -46,24 +48,31 @@ public class ERDiagramInformationControl extends AbstractInformationControl {
 
         final int width = 300;
         final int height = 300;
-
-        final Point loc = composite.toDisplay(0, 0);
-        final Point size = composite.getSize();
-
-        final int overX = diagram.getMousePoint().x + width - size.x;
-        final int overY = diagram.getMousePoint().y + width - size.y;
-
-        final int x = diagram.getMousePoint().x + loc.x - (0 < overX ? overX : 0);
-        final int y = diagram.getMousePoint().y + loc.y - (0 < overY ? overY : 0);
-
         setSize(width, height);
-        setLocation(new Point(x, y));
+        setLocation(computeLocation(width, height, composite));
+
         addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
                 dispose();
             }
         });
+    }
+
+    private Point computeLocation(int width, int height, Control composite) {
+        final Point loc = composite.toDisplay(0, 0);
+        final Point size = composite.getSize();
+
+        final int mouseX = MouseInfo.getPointerInfo().getLocation().x;
+        final int mouseY = MouseInfo.getPointerInfo().getLocation().y;
+
+        final int overX = mouseX + width - (loc.x + size.x);
+        final int overY = mouseY + height - (loc.y + size.y);
+
+        final int x = mouseX - (0 < overX ? overX : 0);
+        final int y = mouseY - (0 < overY ? overY : 0);
+
+        return new Point(x, y);
     }
 
     @Override

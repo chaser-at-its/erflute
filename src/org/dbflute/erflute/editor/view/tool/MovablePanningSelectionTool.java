@@ -123,6 +123,8 @@ public class MovablePanningSelectionTool extends PanningSelectionTool {
             // マウスポインタがクリックされた位置を記録する。コピーしたオブジェクトの貼り付け位置として使う、等。
             final AbstractModelEditPart editPart = (AbstractModelEditPart) viewer.getContents();
             final IERDiagram diagram = (IERDiagram) editPart.getModel();
+            // todo ymd このマウスポインタは、仮想ダイアグラムに正しく設定されない。
+            //          クイックアウトラインの表示では、java.awt.MouseInfoの座標を使った。
             diagram.setMousePoint(new Point(e.x, e.y));
             editPart.getFigure().translateToRelative(diagram.getMousePoint());
 
